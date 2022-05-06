@@ -1,0 +1,14 @@
+<form method="post" action="">
+      {% csrf_token %}
+
+      <input type="text" name="name">
+      <input type="submit" name="submit" value="search"><br><br><br>
+      {% for result in results %}
+
+    <p>{{result.username}}</p>
+
+{% endfor %}
+
+       
+  
+</form>

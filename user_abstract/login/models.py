@@ -15,6 +15,7 @@ class UserManager(BaseUserManager):
         """
         Create and save a User with the given email and password.
         """
+        # email = self.normalize_email(email)
         user = self.model(username=username, **extra_fields)
         user.set_password(password)
         user.save()
@@ -28,6 +29,7 @@ class UserProfile(AbstractUser):
       birth_date = models.DateField(null=True, blank=True)
 
       objects = UserManager()
+
 
 
 

@@ -61,19 +61,17 @@ def user_profile(request):
 
 
 def login_view(request):
+
   if request.method == "POST":
+
       fm=AuthenticationForm(request=request,data=request.POST)
-      print("🚀 ~ file: views.py ~ line 66 ~ fm", fm)
+      # print("🚀 ~ file: views.py ~ line 66 ~ fm", fm)
 
       if fm.is_valid():
-        # uname=fm.cleaned_data.POST['username']
         uname=fm.cleaned_data.get('username')
-
         print("🚀 ~ file: views.py ~ line 66 ~ uname", uname)
 
-        # upwd=fm.cleaned_data.POST['password']
         upwd=fm.cleaned_data.get('password')
-
         print("🚀 ~ file: views.py ~ line 68 ~ upwd", upwd)
         
         user=authenticate(username=uname,password=upwd)
@@ -81,17 +79,31 @@ def login_view(request):
         
         if user is not None:
           login(request,user)
-          return HttpResponseRedirect('/profile/')
+          # return HttpResponseRedirect('/profile/')
+          return render(request,'login/profile.html',{'uname':user})
   else:
     fm=AuthenticationForm()
   return render(request,'login/login.html',{'form':fm})
 
 def profile(request):
        return render(request,'login/profile.html')
-
+           
 def logout_view(request):
       logout(request)     
       return HttpResponseRedirect('/logout/')
 
 
+
+def search_product(request):
+    """ search function  """
+    if request.method == "POST":
+        query_name = request.POST.get('name', None)
+        
+        if query_name:
+            results = UserProfile.objects.filter(username__contains=query_name)
+            print("🚀 ~ file: views.py ~ line 105 ~ results", results)
             
+            return render(request, 'login/search.html', {"results":results})
+        else:
+          return HttpResponse("not found")
+    return render(request, 'login/search.html')
